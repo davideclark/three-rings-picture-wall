@@ -22,13 +22,13 @@ public class HomeController : Controller
 
     [HttpGet]
     [Route("Anniversaries")]
-    public IActionResult AnniversariesIndex([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize)
+    public IActionResult AnniversariesIndex([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize, string headingText)
     {
         ViewData["anniversaryHeading"] = DateTime.Now.ToString("MMMM") + " Anniversaries";
-        return Index(numberOfRows, numberOfColumns, pageNumber, ignoreIds, roles, cardSize, nameFontSize, headingFontSize);
+        return Index(numberOfRows, numberOfColumns, pageNumber, ignoreIds, roles, cardSize, nameFontSize, headingFontSize, headingText);
     }
 
-    public IActionResult Index([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize)
+    public IActionResult Index([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize, string headingText)
     {
         if (roles == null)
         {
@@ -59,6 +59,10 @@ public class HomeController : Controller
         {
             headingFontSize = "50";
         }
+        if (headingText == null || headingText == "")
+        {
+            headingText = "Volunteers";
+        }
 
         ViewData["numberOfRows"] = numberOfRows;
         ViewData["numberOfColumns"] = numberOfColumns;
@@ -68,6 +72,8 @@ public class HomeController : Controller
         ViewData["cardSize"] = cardSize;
         ViewData["nameFontSize"] = nameFontSize;
         ViewData["headingFontSize"] = headingFontSize;
+        ViewData["headingText"] = headingText;
+
         return View();
     }
 

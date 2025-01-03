@@ -2,7 +2,7 @@
     ViewData["Title"] = "Picture Wall";
 }
 <div id="heading" class="text-center"
-    style="font-size:50px;font-family:Varah,Sans-serif;color:#84bd00;font-weight: 400;">Luton Branch Volunteers</div>
+    style="font-size:50px;font-family:Varah,Sans-serif;color:#84bd00;font-weight: 400;">@ViewData["headingText"]</div>
 
 <div id="volunteer-list-div">
 </div>
@@ -21,6 +21,7 @@
             var cardSize = '@ViewData["cardSize"]';
             var nameFontSize = '@ViewData["nameFontSize"]';
             var headingFontSize = '@ViewData["headingFontSize"]';
+            var headingText = '@ViewData["headingText"]';
 
             var queryString = `?numberOfRows=${numberOfRows}&numberOfColumns=${numberOfColumns}&pageNumber=${pageNumber}&ignoreIds=${ignoreIds}&roles=${roles}`;
             document.getElementById('heading').style.fontSize = headingFontSize + 'px';
