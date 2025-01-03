@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Picture Wall";
+}
+<div id="heading" class="text-center"
+    style="font-size:50px;font-family:Varah,Sans-serif;color:#84bd00;font-weight: 400;">Luton Branch Volunteers</div>
+
+<div id="volunteer-list-div">
+</div>
+
+<script>
+    $(function () {
+        var loadVolunteers = function () {
+            // console.log('Loading Volunteers');
+            $('volunteer-list').empty();
+
+            var numberOfRows = @ViewData["numberOfRows"];
+            var numberOfColumns = @ViewData["numberOfColumns"];
+            var pageNumber = @ViewData["pageNumber"];
+            var ignoreIds = '@ViewData["ignoreIds"]';
+            var roles = '@ViewData["roles"]';
+            var cardSize = '@ViewData["cardSize"]';
+            var nameFontSize = '@ViewData["nameFontSize"]';
+            var headingFontSize = '@ViewData["headingFontSize"]';
+
+            var queryString = `?numberOfRows=${numberOfRows}&numberOfColumns=${numberOfColumns}&pageNumber=${pageNumber}&ignoreIds=${ignoreIds}&roles=${roles}`;
+            document.getElementById('heading').style.fontSize = headingFontSize + 'px';
+
+            $.get(`/Home/volunteers${queryString}`)
+                .done(function (response) {
+
+                    var volunteers = $.parseJSON(response);
+                    var volunteersPerRow = numberOfColumns;
+                    var rowElement;
+                    $.each(volunteers, function (i, volunteer) {
+                        if (i % numberOfColumns == 0) {
+                            var rowId = `volunteer-row-div-${i / numberOfColumns}`;
+                            $('#volunteer-list-div').append(`<div class="row justify-content-center mt-3" id="${rowId}">`);
+                            rowElement = $(`#${rowId}`);
+                        }
+
+                        var imageUrl = `/home/volunteerPhoto/${volunteer.IdNumber}`;
+                        var volunteerCard = `<div class="card" style="width: ${cardSize}rem;">
+                            <img src="${imageUrl}" class="card-img-top" alt="${volunteer.IdNumber}">
+                                <div class="card-body">
+                                    <p class="card-text text-center" style="font-size:${nameFontSize}px"> ${volunteer.Name}</p>
+                                </div>
+                        </div>`
+                        rowElement.append(volunteerCard);
+
+                        if (i % numberOfColumns - 1 == 0) {
+                            $('#volunteer-list-div').append('</div>');
+                        }
+                    });
+                });
+        }
+        loadVolunteers();
+    });
+</script>

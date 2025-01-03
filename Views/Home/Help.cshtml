@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Help";
+}
+
+<div class="text-center">
+    <h1 class="display-4">3 Rings Picture Wall Guide</h1>
+</div>
+
+<p> This web site is used to display a picture wall of the volunteers from the directory of 3 Rings.
+    The volunteers displayed are controlled using query string paramters on the sites main url.
+    The following commands are avaialble:
+<h3>Picture wall</h3>
+<ol>
+    <li><code>numberOfRows</code> The number of volunteers per row </li>
+    <li><code>numberOfColumns</code> The number of volunteers per column.</li>
+    <li><code>pageNumber</code> The page number to display.</li>
+    <li><code>ignoreIds</code> This allow you to remove a volunteer from the diaplay, and is a comma seperated list of
+        volunter ids you get see in the 3 rings directory. You might want to do this if they have no picture. </li>
+    <li><code>roles</code> This allows you to filter the volunteers by role. The roles are defined in a comma seperated
+        list using the names taken from the 3 Rings Directory.
+        <p>The names must have any of the following characters removed.</p>
+        <p> ; / ? : @@ & = + $ , and whitespace </p>
+        <p>For example <code>Samaritan & Shift Leader</code> becomes
+            <code>SamaritanShiftLeader</code>
+        </p>
+    </li>
+    <li><code>cardsize</code> The size of the volunteer picture card, this defaults to 18
+    <li><code>nameFontsize</code> The font size of the volunteer's name under their photo, defaults to 20</li>
+    <li><code>headingFontSize</code> The font size of the headings on the volunteer and anniversary picture walls,
+        defaults to 50</li>
+</ol>
+<H2>Example Url</H2>
+<code>http://localhost:5028/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30</code>
+
+<h3>Anniversaries Picture Wall</h3>
+<p>Displays a list of volunteer who's anniversary falls in the current month.
+    It displays their name, photo, year they joined and the number of years they have been volunteering with us.
+    This is based on the join date in Three Rings</p>
+<p>This uses the same commands as the picture wall</p>
+<H2>Example Urls</H2>
+<code>http://localhost:5028/Anniversaries/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30</code>
+<code>http://localhost:5028/Anniversaries/?HeadingFontSize=80&roles=Samaritan,SamaritanShiftLeader</code>
+
+<h3>Caching</h3>
+<p>The volunteer list and photos are all cached for one hour. If you want to refrehed the cache with out restarting the
+    web site you can do this by opening this url
+    <code>/clearcache</code>
+</p>
+<h3>Help</h3>
+<p>This help page is at <code>/help</code></p>
+
+<h3>Source Code</h3>
+<p>This site is open source. the repo on git hub is</p>
+<p>If your running the site directly from source at git hub you
+    will to provide your own configuration typically in the a json.secrets file. There are three appsettings.json
+    variables that need to
+    be defined.</p>
+<ol>
+    <li>
+        <code>ThreeRingsUrl</code> This is <code>https://www.3r.org.uk/</code>
+    </li>
+    <li> <code>ThreeRingsApiKey</code> Found in your 3 Rings account details
+    </li>
+    <li> <code>ContactEmail</code> To allow the 3 rings admins to contact you if they have questions about the
+        use of their API
+    </li>
+</ol>
+<h3>Docker images</h3>
+<p>This site is avaialble as a docker image</p>
