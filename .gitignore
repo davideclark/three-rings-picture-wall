@@ -483,3 +483,6 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 Notes.txt
+
+# Vector database
+vectors.db

@@ -126,9 +126,20 @@ public class HomeController : Controller
             // If cached volumteers do not exist
             if (!_memoryCache.TryGetValue("threeRingsVolunteersResponse", out string? cachedThreeRingsResponse))
             {
-                var url = _configuration.GetValue<string>("ThreeRingsUrl") ?? throw new Exception("ThreeRingsUrl variable not set");
-                var apiKey = _configuration.GetValue<string>("ThreeRingsApiKey") ?? throw new Exception("ApiKey variable not set");
-                var ContactEmail = _configuration.GetValue<string>("ContactEmail") ?? throw new Exception("ContactEmail variable not set");
+                var url = _configuration.GetValue<string>("ThreeRingsUrl");
+                var apiKey = _configuration.GetValue<string>("ThreeRingsApiKey");
+                var ContactEmail = _configuration.GetValue<string>("ContactEmail");
+
+                var missingKeys = new List<string>();
+                if (string.IsNullOrEmpty(url)) missingKeys.Add("ThreeRingsUrl");
+                if (string.IsNullOrEmpty(apiKey)) missingKeys.Add("ThreeRingsApiKey");
+                if (string.IsNullOrEmpty(ContactEmail)) missingKeys.Add("ContactEmail");
+                if (missingKeys.Count > 0)
+                {
+                    var missingConfig = string.Join(", ", missingKeys);
+                    _logger.Log(LogLevel.Warning, "Missing configuration: {MissingConfig}", missingConfig);
+                    return StatusCode(500, new { error = "configuration_missing", message = $"The following configuration values are missing: {missingConfig}. Please update appsettings.json or set the corresponding environment variables." });
+                }
 
                 url = url + "directory.json";
                 var uri = new Uri(url);

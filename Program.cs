@@ -43,6 +43,15 @@ internal class Program
         var configDebugView = ((IConfigurationRoot)app.Configuration).GetDebugView();
         app.Logger.Log(LogLevel.Information, configDebugView);
 
+        var requiredKeys = new[] { "ThreeRingsUrl", "ThreeRingsApiKey", "ContactEmail" };
+        foreach (var key in requiredKeys)
+        {
+            if (string.IsNullOrEmpty(app.Configuration.GetValue<string>(key)))
+            {
+                app.Logger.Log(LogLevel.Warning, "Configuration value '{Key}' is missing or empty. The application will not be able to fetch volunteer data.", key);
+            }
+        }
+
         app.Run();
     }
 }
