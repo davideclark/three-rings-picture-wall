@@ -138,7 +138,10 @@ public class HomeController : Controller
                 {
                     var missingConfig = string.Join(", ", missingKeys);
                     _logger.Log(LogLevel.Warning, "Missing configuration: {MissingConfig}", missingConfig);
-                    return StatusCode(500, new { error = "configuration_missing", message = $"The following configuration values are missing: {missingConfig}. Please update appsettings.json or set the corresponding environment variables." });
+                    return Problem(
+                        detail: $"The following configuration values are missing: {missingConfig}. Please update appsettings.json or set the corresponding environment variables.",
+                        title: "Configuration missing",
+                        statusCode: 500);
                 }
 
                 url = url + "directory.json";
@@ -197,21 +200,21 @@ public class HomeController : Controller
 
                 foreach (var volunteer in threeRingsVolunteersResponse.Volunteers)
                 {
-                    var joinDate = DateTime.Parse(volunteer.VolunteerProperties
-                        .Where(vp => vp.ContainsKey("join_date"))
-                        .First().First().Value.Value);
 
-                    bool isCurrentMonth = DateTime.Now.Month == joinDate.Month;
+                    var joinDate = ParseVolunteerStartDate(volunteer);
 
-                    if (isCurrentMonth && joinDate < DateTime.Now.AddYears(-1))
+                    if (joinDate.HasValue)
                     {
-                        anniversaryolunteers.Add(volunteer);
+                        bool isCurrentMonth = DateTime.Now.Month == joinDate.Value.Month;
+
+                        if (isCurrentMonth && joinDate < DateTime.Now.AddYears(-1))
+                        {
+                            anniversaryolunteers.Add(volunteer);
+                        }
                     }
                 }
 
-                var sortedAnniversaryolunteers = anniversaryolunteers.OrderBy(volunteer => DateTime.Parse(volunteer.VolunteerProperties
-                         .Where(vp => vp.ContainsKey("join_date"))
-                         .First().First().Value.Value)).ToList();
+                var sortedAnniversaryolunteers = anniversaryolunteers.OrderBy(volunteer => ParseVolunteerStartDate(volunteer).Value).ToList();
 
                 threeRingsVolunteersResponse.Volunteers = sortedAnniversaryolunteers;
             }
@@ -294,6 +297,8 @@ public class HomeController : Controller
 
             for (int volunteerCounter = volunteerStartCount; volunteerCounter < volunteerEndCount; volunteerCounter++)
             {
+                // each property is a list of name / Dictionary pairs
+                
                 var volunteer = new Volunteer();
                 volunteer.FirstName = threeRingsVolunteersResponse.Volunteers[volunteerCounter].VolunteerProperties
                     .Where(vp => vp.ContainsKey("first_name"))
@@ -307,11 +312,20 @@ public class HomeController : Controller
 
                 volunteer.IdNumber = threeRingsVolunteersResponse.Volunteers[volunteerCounter].Id;
 
-                volunteer.JoinDate = DateTime.Parse(threeRingsVolunteersResponse.Volunteers[volunteerCounter].VolunteerProperties
-                        .Where(vp => vp.ContainsKey("join_date"))
-                        .First().First().Value.Value);
 
+                var joinDate = ParseVolunteerStartDate(threeRingsVolunteersResponse.Volunteers[volunteerCounter]);
+
+                if (joinDate.HasValue)
+                {
+                    volunteer.JoinDate = joinDate;
+                }
+                else
+                {
+                    _logger.LogWarning("Volunteer with missing start date: {Name} {Surname}", volunteer.Name, volunteer.Surname);
+                }
+                
                 volunteers.Add(volunteer);
+
             }
             string volunteersJson = JsonSerializer.Serialize(volunteers);
             return Ok(volunteersJson);
@@ -328,6 +342,28 @@ public class HomeController : Controller
             title: errorMessage);
 
         }
+    }
+
+    private DateTime? ParseVolunteerStartDate(ThreeRingsVolunteerResponse volunteer)
+    {
+
+        var joinDate = volunteer.VolunteerProperties
+                .Where(vp => vp.ContainsKey("join_date"));
+
+        if (joinDate.Any())
+        {
+            var joinDateValue = joinDate.First().FirstOrDefault().Value.Value;
+
+            if (!string.IsNullOrEmpty(joinDateValue))
+            {
+                DateTime parsedJoinDate;
+                if (DateTime.TryParse(joinDateValue, out parsedJoinDate))
+                {
+                    return parsedJoinDate;
+                }
+            }
+        }
+        return null;
     }
 
 

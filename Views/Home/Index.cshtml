@@ -55,10 +55,10 @@
                 })
                 .fail(function (xhr) {
                     var message = 'Unable to load volunteer data.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message;
+                    if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        message = xhr.responseJSON.detail;
                     }
-                    $('#volunteer-list-div').html(`<div class="alert alert-warning text-center mt-4" role="alert"><strong>Warning:</strong> ${message}</div>`);
+                    $('#volunteer-list-div').html(`<div class="alert alert-warning text-center mt-4" role="alert"><strong>Warning (HTTP ${xhr.status}):</strong> ${message}</div>`);
                 });
         }
         loadVolunteers();

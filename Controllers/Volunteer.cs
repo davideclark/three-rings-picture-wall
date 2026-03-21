@@ -16,7 +16,7 @@ public class Volunteer
   public string CarRegistrationPlate { get; set; } = string.Empty;
   public string Website { get; set; } = string.Empty;
   public string Occupation { get; set; } = string.Empty;
-  public DateTime JoinDate { get; set; }
+  public DateTime? JoinDate { get; set; }
   public string Commitment { get; set; } = string.Empty;
   public string AboutMe { get; set; } = string.Empty;
   public string Allergies { get; set; } = string.Empty;
@@ -31,7 +31,6 @@ public class Volunteer
   public string EmergencyContactDetails { get; set; } = string.Empty;
   public string Roles { get; set; } = string.Empty;
   public string Relationships { get; set; } = string.Empty;
-  // public string JoinDateFormated { get; set; } = string.Empty;
-  public string AnniversaryYear { get { return (DateTime.Now.Year - JoinDate.Year).ToString(); } }
-  public string JoinDateFormated { get { return JoinDate.ToString("D", CultureInfo.InvariantCulture); } }
+  public string AnniversaryYear { get { return JoinDate.HasValue ? (DateTime.Now.Year - JoinDate.Value.Year).ToString() : string.Empty; } }
+  public string JoinDateFormated { get { return JoinDate.HasValue ? JoinDate.Value.ToString("D", CultureInfo.InvariantCulture) : string.Empty; } }
 }
