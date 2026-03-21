@@ -31,7 +31,8 @@ ARG TARGETARCH
 #   work in .NET 6.0.
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
     ARCH=$(echo $TARGETARCH | sed 's/amd64/x64/') && \
-    dotnet publish -a $ARCH --self-contained false -o /app
+    echo "Building for TARGETARCH=$TARGETARCH ARCH=$ARCH" && \
+    dotnet publish -a $ARCH --self-contained false -o /app 2>&1 || (echo "dotnet publish failed" && exit 1)
 
 # If you need to enable globalization and time zones:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
