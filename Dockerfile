@@ -36,7 +36,6 @@ RUN --mount=type=cache,id=nuget-$TARGETARCH,target=/root/.nuget/packages \
         arm)   RID=linux-arm ;; \
         *) echo "Unknown arch: $TARGETARCH" && exit 1 ;; \
     esac && \
-    echo "Building for TARGETARCH=$TARGETARCH RID=$RID" && \
     dotnet publish -r $RID --self-contained false -o /app
 
 # If you need to enable globalization and time zones:
