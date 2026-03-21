@@ -30,9 +30,14 @@ ARG TARGETARCH
 # If TARGETARCH is "amd64", replace it with "x64" - "x64" is .NET's canonical name for this and "amd64" doesn't
 #   work in .NET 6.0.
 RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
-    ARCH=$(echo $TARGETARCH | sed 's/amd64/x64/') && \
-    echo "Building for TARGETARCH=$TARGETARCH ARCH=$ARCH" && \
-    dotnet publish -a $ARCH --self-contained false -o /app 2>&1 || (echo "dotnet publish failed" && exit 1)
+    case "$TARGETARCH" in \
+        amd64) RID=linux-x64 ;; \
+        arm64) RID=linux-arm64 ;; \
+        arm)   RID=linux-arm ;; \
+        *) echo "Unknown arch: $TARGETARCH" && exit 1 ;; \
+    esac && \
+    echo "Building for TARGETARCH=$TARGETARCH RID=$RID" && \
+    dotnet publish -r $RID --self-contained false -o /app
 
 # If you need to enable globalization and time zones:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/enable-globalization.md
