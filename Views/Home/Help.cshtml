@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Help";
+    var baseUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
 }
 
 <div class="text-center">
@@ -7,16 +8,16 @@
 </div>
 
 <p> This web site is used to display a picture wall of the volunteers from the directory of 3 Rings.
-    The volunteers displayed are controlled using query string paramters on the sites main url.
-    The following commands are avaialble:
+    The volunteers displayed are controlled using query string parameters on the site's main url.
+    The following commands are available:</p>
 <h3>Picture wall</h3>
 <ol>
     <li><code>numberOfRows</code> The number of volunteers per row </li>
     <li><code>numberOfColumns</code> The number of volunteers per column.</li>
     <li><code>pageNumber</code> The page number to display.</li>
-    <li><code>ignoreIds</code> This allow you to remove a volunteer from the diaplay, and is a comma seperated list of
-        volunter ids you get see in the 3 rings directory. You might want to do this if they have no picture. </li>
-    <li><code>roles</code> This allows you to filter the volunteers by role. The roles are defined in a comma seperated
+    <li><code>ignoreIds</code> This allows you to remove a volunteer from the display, and is a comma separated list of
+        volunteer ids you can see in the 3 rings directory. You might want to do this if they have no picture. </li>
+    <li><code>roles</code> This allows you to filter the volunteers by role. The roles are defined in a comma separated
         list using the names taken from the 3 Rings Directory.
         <p>The names must have any of the following characters removed.</p>
         <p> ; / ? : @@ & = + $ , and whitespace </p>
@@ -24,43 +25,43 @@
             <code>SamaritanShiftLeader</code>
         </p>
     </li>
-    <li><code>cardsize</code> The size of the volunteer picture card, this defaults to 18
+    <li><code>cardsize</code> The size of the volunteer picture card, this defaults to 18</li>
     <li><code>nameFontsize</code> The font size of the volunteer's name under their photo, defaults to 20</li>
     <li><code>headingFontSize</code> The font size of the headings on the volunteer and anniversary picture walls,
         defaults to 50</li>
-    <li><code>headingText</code>The heading text, defaults to volunteers if no specified. Use %20 to insert a space in
+    <li><code>headingText</code> The heading text, defaults to volunteers if not specified. Use %20 to insert a space in
         the heading </li>
 </ol>
-<H2>Example Url</H2>
-<code>http://localhost:5028/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30</code>
+<h3>Example Url</h3>
+<p><a href="@baseUrl/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30&headingFontSize=50&headingText=My%20Volunteers"><code>@baseUrl/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30&headingFontSize=50&headingText=My%20Volunteers</code></a></p>
 
 <h3>Anniversaries Picture Wall</h3>
-<code>http://localhost:5028/Anniversaries</code>
-<p>Displays a list of volunteer who's anniversary falls in the current month.
+<p>Displays a list of volunteers whose anniversary falls in the current month.
     It displays their name, photo, year they joined and the number of years they have been volunteering with us.
     This is based on the join date in Three Rings</p>
-<p>This uses the same commands as the picture wall, the heading is not modifable.</p>
-<H2>Example Urls</H2>
-<code>http://localhost:5028/Anniversaries/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30</code>
-<code>http://localhost:5028/Anniversaries/?HeadingFontSize=80&roles=Samaritan,SamaritanShiftLeader</code>
+<p>This uses the same commands as the picture wall, except <code>headingText</code> and <code>headingFontSize</code> are not modifiable.</p>
+<h3>Example Urls</h3>
+<p><a href="@baseUrl/Anniversaries"><code>@baseUrl/Anniversaries</code></a></p>
+<p><a href="@baseUrl/Anniversaries/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30"><code>@baseUrl/Anniversaries/?numberOfRows=3&numberOfColumns=5&pageNumber=0&ignoreIds=187840,202878,11770&roles=SupportVolunteer&cardsize=20&nameFontsize=30</code></a></p>
+<p><a href="@baseUrl/Anniversaries/?roles=Samaritan,SamaritanShiftLeader"><code>@baseUrl/Anniversaries/?roles=Samaritan,SamaritanShiftLeader</code></a></p>
 
 <h3>Caching</h3>
-<p>The volunteer list and photos are all cached for one hour. If you want to refrehed the cache with out restarting the
+<p>The volunteer list and photos are all cached for one hour. If you want to refresh the cache without restarting the
     web site you can do this by opening this url
-    <code>/clearcache</code>
+    <a href="/clearcache"><code>/clearcache</code></a>
 </p>
 <h3>Help</h3>
-<p>This help page is at <code>/help</code></p>
+<p>This help page is at <a href="/help"><code>/help</code></a></p>
 
 <h3>Source Code</h3>
-<p>This site is open source. the repo on git hub is</p>
-<p>If your running the site directly from source at git hub you
-    will to provide your own configuration typically in the a json.secrets file. There are three appsettings.json
+<p>This site is open source. The repo on GitHub is <a href="https://github.com/davideclark/three-rings-picture-wall">https://github.com/davideclark/three-rings-picture-wall</a></p>
+<p>If you're running the site directly from source at GitHub you
+    will need to provide your own configuration typically in a json.secrets file. There are three appsettings.json
     variables that need to
     be defined.</p>
 <ol>
     <li>
-        <code>ThreeRingsUrl</code> This is <code>https://www.3r.org.uk/</code>
+        <code>ThreeRingsUrl</code> <code>https://www.3r.org.uk/</code>
     </li>
     <li> <code>ThreeRingsApiKey</code> Found in your 3 Rings account details
     </li>
@@ -69,4 +70,10 @@
     </li>
 </ol>
 <h3>Docker images</h3>
-<p>This site is avaialble as a docker image</p>
+<p>This site is available as a <a href="https://hub.docker.com/repository/docker/davideclark/three-rings-picturewall">Docker image</a>. The following platforms are supported:</p>
+<ul>
+    <li>Windows (via Docker Desktop)</li>
+    <li>Linux 64-bit (Intel/AMD)</li>
+    <li>Raspberry Pi 64-bit</li>
+    <li>Raspberry Pi 32-bit</li>
+</ul>
