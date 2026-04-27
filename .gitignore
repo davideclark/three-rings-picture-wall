@@ -486,3 +486,10 @@ Notes.txt
 
 # Vector database
 vectors.db
+
+# devrag MCP tool files (not part of the project)
+config.json
+Models/multilingual-e5-small/
+
+# Secrets
+appsettings.json

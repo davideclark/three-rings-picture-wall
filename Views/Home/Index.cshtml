@@ -4,6 +4,14 @@
 <div id="heading" class="text-center"
     style="font-size:50px;font-family:Varah,Sans-serif;color:#84bd00;font-weight: 400;">@ViewData["headingText"]</div>
 
+@if (!string.IsNullOrEmpty(ViewData["subHeadingText"] as string))
+{
+    <div id="sub-heading" class="text-center"
+        style="font-size:@(ViewData["subHeadingFontSize"] ?? "30")px;font-family:Varah,Sans-serif;color:#84bd00;font-weight:400;">
+        @ViewData["subHeadingText"]
+    </div>
+}
+
 <div id="volunteer-list-div">
 </div>
 

@@ -25,10 +25,10 @@ public class HomeController : Controller
     public IActionResult AnniversariesIndex([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize, string headingText)
     {
         ViewData["anniversaryHeading"] = DateTime.Now.ToString("MMMM") + " Anniversaries";
-        return Index(numberOfRows, numberOfColumns, pageNumber, ignoreIds, roles, cardSize, nameFontSize, headingFontSize, headingText);
+        return Index(numberOfRows, numberOfColumns, pageNumber, ignoreIds, roles, cardSize, nameFontSize, headingFontSize, headingText, null, null);
     }
 
-    public IActionResult Index([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize, string headingText)
+    public IActionResult Index([FromQuery] int numberOfRows, [FromQuery] int numberOfColumns, [FromQuery] int pageNumber, [FromQuery] string ignoreIds, [FromQuery] string roles, [FromQuery] string cardSize, [FromQuery] string nameFontSize, string headingFontSize, string headingText, string subHeadingText, string subHeadingFontSize)
     {
         if (roles == null)
         {
@@ -55,13 +55,21 @@ public class HomeController : Controller
         {
             nameFontSize = "20";
         }
-        if (headingFontSize == null)
+        if (string.IsNullOrEmpty(headingFontSize))
         {
             headingFontSize = "50";
         }
-        if (headingText == null || headingText == "")
+        if (string.IsNullOrEmpty(headingText))
         {
             headingText = "Volunteers";
+        }
+        if (string.IsNullOrEmpty(subHeadingText))
+        {
+            subHeadingText = string.Empty;
+        }
+        if (string.IsNullOrEmpty(subHeadingFontSize))
+        {
+            subHeadingFontSize = "30";
         }
 
         ViewData["numberOfRows"] = numberOfRows;
@@ -73,6 +81,8 @@ public class HomeController : Controller
         ViewData["nameFontSize"] = nameFontSize;
         ViewData["headingFontSize"] = headingFontSize;
         ViewData["headingText"] = headingText;
+        ViewData["subHeadingText"] = subHeadingText;
+        ViewData["subHeadingFontSize"] = subHeadingFontSize;
 
         return View();
     }
